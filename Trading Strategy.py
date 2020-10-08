@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Spyder Editor
-
 This is a temporary script file.
 """
 import pandas as pd
@@ -20,15 +19,26 @@ end = datetime.date(2018, 3, 27)
 s = "AAPL"
 
 #stores ticker symbol data between the start and end date into the variable data
-data =  quandl.get("WIKI/" + s, start_date = start, end_date = end)
+dataFromQuandl =  quandl.get("WIKI/" + s, start_date = start, end_date = end)
 
 #prints data to console
-type(data)
+type(dataFromQuandl)
 
 #Prints the value of "Close" from data at entry position 2 (Starts at 0, 1, 2...etc)
-print(data["Close"][1])
+print(dataFromQuandl["Close"][1])
+
+#stores data from variable "dataForQuandl" into a pandas DataFrame
+df = pd.DataFrame(data = dataFromQuandl, columns = ["Close"])
+print(df)
+
+#Instead of indexing 0-x you can search for specific dates
+df = df.set_index('dates')
 
 
+
+
+
+#------------------------------------NOTES----------------------------------------
 #What to implement: 
     #MACD
     #Moving averages(20, 50, 200)
