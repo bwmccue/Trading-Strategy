@@ -26,10 +26,10 @@ SMA1 = 50
 #SMA Variable 2
 SMA2 = 200
 #Ticker Symbol
-s = "AMD"
+stockSymbol = "AMD"
 
-#stores ticker symbol data between the start and end date into the variable data
-dataFromQuandl =  quandl.get("WIKI/" + s, start_date = start, end_date = end)
+#stores ticker symbol data between the start and end date into the variable dataFromQuandl
+dataFromQuandl =  quandl.get("WIKI/" + stockSymbol, start_date = start, end_date = end)
 
 #stores data from variable "dataForQuandl" into a pandas DataFrame
 df = pd.DataFrame(data = dataFromQuandl, columns = ["Date", "Close"])
@@ -42,7 +42,7 @@ df = pd.DataFrame(data = dataFromQuandl, columns = ["Date", "Close"])
 #what SMA is being calculated
 df["SMA 50"] = df.iloc[:,1].rolling(window=SMA1).mean()
 #Second SMA meed to change the value of each line or else it will only print one line
-df["SMA 200"] = df.iloc[:,2].rolling(window=SMA1).mean()
+df["SMA 200"] = df.iloc[:,2].rolling(window=SMA2).mean()
 
 
 
