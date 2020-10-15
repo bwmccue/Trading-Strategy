@@ -22,7 +22,7 @@ start = datetime.datetime(2010,1,1)
 end = datetime.date(2018, 3, 27)
 
 #SMA Variable 1
-SMA1 = 50
+SMA1 = 200
 #SMA Variable 2
 SMA2 = 200
 #Ticker Symbol
@@ -47,8 +47,6 @@ df["SMA 200"] = df.iloc[:,2].rolling(window=SMA2).mean()
 
 
 
-
-
 #---------------------------Printing Data and Creating plot--------------------
 #Prints the value of "Close" from data at entry position 2 (Starts at 0, 1, 2...etc)
 print(df["Close"][0])
@@ -68,18 +66,20 @@ plt.plot(df["SMA 200"],label="SMA Line 200")
 
 
 #------------------------------------NOTES----------------------------------------
-#What to implement: 
-    #MACD
-    #Moving averages(20, 50, 200)
-    #RSI
-    #I can use closing price data to calculate moving averages
+
+#Use Alpha Vantage to get current data
+#Alpha Vantage has prebuilt in indicators so there is no need to build them
+
+
 #RSI calculated using moving averages
 #Look up how to build MACD
 
-
+#Use well known economic models to develop list of stocks to run through program(automated)
 #Overall goal is to have trading strategy that goes through a series
 #of conditions and give us ticker symbols that meet these conditions
+#Then setup code that develops buy and sell levels
 
-#We will use Captial Asset Pricing Model to determine what ticker symbols
-#will run our trading strategy on
-    #
+#We will use differeent economic models too develop a portfolio of stocks we want
+#to run the strategy on
+
+
