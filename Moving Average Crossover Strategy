@@ -1,0 +1,97 @@
+import numpy as np 
+import pandas as pd
+import matplotlib.pyplot as plt
+import datetime
+
+from alpha_vantage.timeseries import TimeSeries
+from alpha_vantage.techindicators import TechIndicators
+
+alpha_vantage_key = 'SGO5M0QZ92JS8IRK'
+alpha_vantage_key2 = 'CDTFKPQFW0Y9OZ5T'
+alpha_vantage_key3 = 'CLXZ3UPUE8STZJOP'
+
+tickerSymbol = 'AAPL'
+
+intervalLength = '30min'
+smallSMATime3 = 5
+smallSMATime2 = 20
+smallSMATime = 50
+largeSMATime = 200
+
+ts = TimeSeries(key = alpha_vantage_key, output_format='pandas')
+ti = TechIndicators(key = alpha_vantage_key, output_format='pandas')
+
+
+#Instructions
+# 1) Change ticker symbol to whatever stock you want to look at
+# 2) run the section of code that is labeled "CREATING EXCEL FILE"
+# 3) An excel file should appear in the same folder this program is saved to
+# 4) Once you have verified if the excel files are there, comment out the creating excel file code
+#    You can do this by palceing a "#" at the start of whatever line you would like to comment out if you are using Spyder
+# 5) Now when you run this program it will pull the data from the excel files and instead of using AlphaVantage
+
+#---------------------------------------------CREATING EXCEL FILE-------------------------------------------------------
+#------use these to create new excel files so you dont have to run AplaVantage each time you want to use this code------
+#------you only need to run this top section each time you want to look at a new ticker symbol--------------------------
+#------after running the first time, comment out all of the code until the second section-------------------------------
+
+
+#-------------------this will take AlphaVantage time series data and save it to a list----------------------------------
+#--dataDaily, meta_data = ts.get_daily_adjusted(symbol = tickerSymbol, outputsize='full')
+
+#----------------------------------creates AlphaVantage lists of all SMA data-------------------------------------------
+#--dataSSMA, meta_data = ti.get_sma(symbol = tickerSymbol, interval = 'daily', time_period = smallSMATime)
+#--dataLSMA, meta_data = ti.get_sma(symbol = tickerSymbol, interval = 'daily', time_period = largeSMATime)
+#--data20SMA, meta_data = ti.get_sma(symbol = tickerSymbol, interval = 'daily', time_period = smallSMATime2)
+#--data5SMA, meta_data = ti.get_sma(symbol = tickerSymbol, interval = 'daily', time_period = smallSMATime3)
+
+#----------------this takes in close column data along with SMA data and saves it to dailyData pandas list--------------
+#--dailyData = pd.DataFrame(dataDaily['4. close'])
+#--dailyData['5 SMA'] = pd.DataFrame(data5SMA)
+#--dailyData['20 SMA'] = pd.DataFrame(data20SMA)
+#--dailyData['50 SMA'] = pd.DataFrame(dataSSMA)
+#--dailyData['200 SMA'] = pd.DataFrame(dataLSMA)
+
+#--------------------------------------this saves dailyData to a .csv file---------------------------------------------
+#--dailyData.to_csv(str(tickerSymbol) + '.csv')
+
+
+
+#------------------------Comment/uncomment out everything until this line to create excel files------------------------
+
+
+
+
+
+#---------------------these lines of code read in information from excel files-----------------------------------------
+dailyData = pd.read_csv('AAPL.csv')
+
+#---------------------Sets Signals to 0--------------------------------------------------------------------------------
+dailyData['Rating 5/20 SMA'] = 0.0
+dailyData['Crossover 5/20 SMA'] = ''
+dailyData['Rating 50/200 SMA'] = 0.0
+dailyData['Crossover 50/200 SMA'] = ''
+
+#-------------------Compares 5/50 SMA to the 20/200 SMA and will return 1.0 if 50 SMA > 200 SMA------------------------
+#-------------------or will return a 0.0 if the 5/50 SMA < 20/200 SMA--------------------------------------------------
+dailyData['Rating 5/20 SMA'] = np.where(dailyData['5 SMA'] > dailyData['20 SMA'], 1.0, 0.0)
+dailyData['Rating 50/200 SMA'] = np.where(dailyData['50 SMA'] > dailyData['200 SMA'], 1.0, 0.0)
+
+#------------------ If crossover shows 1 then the small SMA crossed above the large SMA on that day--------------------
+#------------------ If crossover shows -1 then the small SMA crossed below the large SMA on tha day--------------------
+#------------------ If crossover shows 0 then no crossover occued on that day------------------------------------------
+dailyData['Crossover 5/20 SMA'] = dailyData['Rating 5/20 SMA'].diff()
+dailyData['Crossover 50/200 SMA'] = dailyData['Rating 50/200 SMA'].diff()
+
+print(dailyData)
+
+dailyData.to_csv('SMA Crossover Data for ' + tickerSymbol + '.csv')
+
+
+
+
+
+
+
+
+
